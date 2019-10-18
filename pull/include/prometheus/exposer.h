@@ -20,14 +20,13 @@ class MetricsHandler;
 
 class PROMETHEUS_CPP_PULL_EXPORT Exposer {
  public:
-  explicit Exposer(const std::string& bind_address,
-                   const std::string& uri = std::string("/metrics"),
-                   const std::size_t num_threads = 2);
+  explicit Exposer(std::shared_ptr<CivetServer> server,
+                   const std::string& uri = std::string("/metrics"));
   ~Exposer();
   void RegisterCollectable(const std::weak_ptr<Collectable>& collectable);
 
  private:
-  std::unique_ptr<CivetServer> server_;
+  std::shared_ptr<CivetServer> server_;
   std::vector<std::weak_ptr<Collectable>> collectables_;
   std::shared_ptr<Registry> exposer_registry_;
   std::unique_ptr<detail::MetricsHandler> metrics_handler_;
